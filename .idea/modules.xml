@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/eegnet-testing.iml" filepath="$PROJECT_DIR$/.idea/eegnet-testing.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../openai-quickstart-python/.idea/openai-quickstart-python.iml" filepath="$PROJECT_DIR$/../openai-quickstart-python/.idea/openai-quickstart-python.iml" />
     </modules>
   </component>
 </project>
