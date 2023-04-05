@@ -12,9 +12,9 @@ class BciDataHandler:
         self.runs_id = ['run_0', 'run_1', 'run_2', 'run_3', 'run_4', 'run_5']
         self.events_desc = {'left_hand': 1, 'right_hand': 2, 'both_feet': 3, 'tongue': 4}
         self.tmin, self.tmax, self.t_crop = -.5, 4.5, .5
-        self.selected_events = ['left_hand', 'right_hand']
-        self.raw = self.data.get_data()
-        self.picks = mne.pick_types(self.data.get_data()[1]['session_T']['run_0'].info, eeg=True, stim=False)
+        self.selected_events = ['left_hand', 'right_hand', 'both_feet', 'tongue']
+        self.raw = self.data.get_data(subjects=self.subjects_id)
+        self.picks = mne.pick_types(self.raw[1]['session_T']['run_0'].info, eeg=True, stim=False)
 
     def instantiate_dataset(self):
         for subject_id in self.subjects_id:
