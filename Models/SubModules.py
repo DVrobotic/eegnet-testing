@@ -37,6 +37,7 @@ class MaxNormLayer(nn.Linear):
                 )
         return super(MaxNormLayer, self).forward(x)
 
+
 class SeparableConv2d(nn.Module):
     def __init__(self, in_channels, out_channels, kernel_size, kernels_per_layer=1, bias=False):
         super().__init__()
@@ -44,10 +45,12 @@ class SeparableConv2d(nn.Module):
                                          kernel_size=kernel_size, bias=bias)
         self.pointwise = PointWiseConv2d(in_channels=in_channels, out_channels=out_channels,
                                          kernels_per_layer=kernels_per_layer, bias=bias)
+
     def forward(self, x):
         x = self.depthwise(x)
         x = self.pointwise(x)
         return x
+
 
 class PositionalEncoding(nn.Module):
 
@@ -75,7 +78,7 @@ class ViewConv(nn.Module):
     def __init__(self):
         super().__init__()
 
-    def forward(self,x):
+    def forward(self, x):
         return x.view((x.shape[0], x.shape[1], 1, x.shape[2]))
 
 
