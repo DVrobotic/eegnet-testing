@@ -117,6 +117,7 @@ class EmbeddingLayer(nn.Module):
 
     # output shape -> [Batches, embeding dim, pathces,]
     def forward(self, x):
+        extract_image_patches()
         patches = list(x.chunk(self.patches_num, dim=-1))
         patches[-1] = F.pad(patches[-1], (0, patches[0].shape[-1] - patches[-1].shape[-1]))
         patches = torch.stack(patches, dim=-2)
