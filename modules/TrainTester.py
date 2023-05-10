@@ -18,6 +18,8 @@ class TrainerTester:
         accuracyi = []
         lossv = []
         accuracyv = []
+        kappai = []
+        kappav = []
         for k in range(iterations):
             batch_indexes = torch.randint(0, X_train.shape[0], (batch_size,))
             batch_test_indexes = torch.randint(0, X_test.shape[0], (batch_size,))
@@ -41,11 +43,12 @@ class TrainerTester:
                 #tracking training metrics
                 lossi.append(loss.item())
                 accuracyi.append((pred.argmax(1) == y_batch).type(torch.float32).sum().item() / y_batch.shape[0])
-
+                kappai.append(cohen_kappa_score(pred.argmax(1), y_batch))
                 #tracking test metrics
-                test_loss, test_accuracy = TrainerTester.test_loss(model, X_test_batch, y_test_batch)
+                test_loss, test_accuracy, test_kappa = TrainerTester.test_loss(model, X_test_batch, y_test_batch)
                 lossv.append(test_loss)
                 accuracyv.append(test_accuracy)
+                kappav.append(test_kappa)
 
                 if (k+1) % 100 == 0:
                     print(f"loss: {loss} iteration: {k+1}/{iterations}")
@@ -59,6 +62,11 @@ class TrainerTester:
                     plt.plot(torch.tensor(accuracyi).view(-1, 10).mean(dim=1).tolist(), label="train accuracy")
                     plt.show()
 
+                    plt.title('kappa')
+                    plt.plot(torch.tensor(kappav).view(-1, 10).mean(dim=1).tolist(), label="test accuracy")
+                    plt.plot(torch.tensor(kappai).view(-1, 10).mean(dim=1).tolist(), label="train accuracy")
+                    plt.show()
+
                 ud.append([((lr * p.grad).std() / p.data.std()).item() for p in model.parameters()])
 
         return lossi
@@ -69,8 +77,9 @@ class TrainerTester:
         with torch.no_grad():
             pred, loss, out_values = model(X_test, y_test)
             accuracy = (pred.argmax(1) == y_test).type(torch.float32).sum().item() / y_test.shape[0]
+            kappa = cohen_kappa_score(pred.argmax(1), y_test)
         model.train()
-        return loss, accuracy
+        return loss, accuracy, kappa
 
     @staticmethod
     def test_loop(model, X_test,  y_test):
